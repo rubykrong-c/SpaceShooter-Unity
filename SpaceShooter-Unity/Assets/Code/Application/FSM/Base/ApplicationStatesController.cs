@@ -42,11 +42,7 @@ namespace Code.Application.States
 
         private void GameLoaded()
         {
-#if RELEASE_MODE
-            SetNextStateByCommand(ApplicationCommand.GAMEPLAY_START);
-#else
             SetNextStateByCommand(ApplicationCommand.OPEN_MAIN_MENU);
-#endif
         }
 
         private void StartGameplay()
