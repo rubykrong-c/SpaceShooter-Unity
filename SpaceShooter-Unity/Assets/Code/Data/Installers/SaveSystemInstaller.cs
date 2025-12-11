@@ -1,4 +1,5 @@
 using Code;
+using Code.Levels;
 using Zenject;
 
 public class SaveSystemInstaller : MonoInstaller
@@ -19,7 +20,7 @@ public class SaveSystemInstaller : MonoInstaller
             .AsSingle();
 
         // Доменные сервисы, которые сохраняются
-        Container.BindInterfacesAndSelfTo<PlayerProgressService>()
+        Container.BindInterfacesAndSelfTo<LevelProgressService>()
             .AsSingle();   
         
         // Любой новый сервис, который реализует ISaveable,

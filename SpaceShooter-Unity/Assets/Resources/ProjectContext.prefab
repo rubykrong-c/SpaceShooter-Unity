@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 9027922015651833607}
   - component: {fileID: 1212425164722869039}
   - component: {fileID: -4634226944284470561}
+  - component: {fileID: 4782239943077160232}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -48,6 +49,7 @@ MonoBehaviour:
   _scriptableObjectInstallers: []
   _monoInstallers:
   - {fileID: -4634226944284470561}
+  - {fileID: 4782239943077160232}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -74,3 +76,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d590eb9f69a4bf8b3e5070068c9d44c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4782239943077160232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7045428191256599987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7cc307e32ce748f6b3ce264229c82f40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSystemInstaller
