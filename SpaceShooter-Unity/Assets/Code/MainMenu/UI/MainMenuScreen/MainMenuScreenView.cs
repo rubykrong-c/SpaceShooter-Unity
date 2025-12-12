@@ -15,9 +15,14 @@ namespace Code.MainMenu.UI.MainMenuScreen
         [SerializeField] private Canvas _screenCanvas;
 
         [SerializeField] private Button _startGameplayButton;
+        [SerializeField] private TMP_Text _currentLevelText;
 #pragma warning restore 0649
 
         public event Action OnStartGameplayButtonPressed;
+        public void SetCurrentLevel(int id)
+        {
+            _currentLevelText.text = $"Level : {id}";
+        }
 
         [Inject]
         private void Construct(MainMenuScreenPresenterFactory presenterFactory)

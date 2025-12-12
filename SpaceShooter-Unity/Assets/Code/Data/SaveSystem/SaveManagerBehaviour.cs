@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -13,6 +14,11 @@ namespace Code
         {
             _saveManager = saveManager;
             _saveManager.LoadAll(); // Загружаем всё при старте приложения
+        }
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
         }
 
         private void OnApplicationPause(bool pause)

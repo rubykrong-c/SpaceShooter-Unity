@@ -4,6 +4,7 @@ using Code.Application.Managers;
 using Code.Application.Signals;
 using Code.Application.States;
 using Code.Base.States;
+using Code.Levels;
 using Code.Services;
 using Zenject;
 
@@ -16,12 +17,20 @@ namespace Code.Application.Installers
             InstallApplication();
             InstallStates();
             InstallSignals();
+            InstallLevels();
             InstallModel();
             InstallUtils();
             InstallApplicationScreen();
 
             // ServicesInstaller.Install(Container);
             // DatabaseInstaller.Install(Container);
+        }
+
+        private void InstallLevels()
+        {
+            Container.Bind<ILevelParamsGenerator>()
+                .To<GeneratorLevels>()
+                .AsSingle();
         }
 
         private void InstallApplication()
@@ -77,9 +86,10 @@ namespace Code.Application.Installers
 
         }
 
+        // это наверно удалю
         private void InstallMainMenuStateSignals()
         {
-            // Container.DeclareSignal<MainMenuStateSignals.OnShowMainMenu>().OptionalSubscriber();
+             Container.DeclareSignal<MainMenuStateSignals.OnShowMainMenu>().OptionalSubscriber();
             // Container.DeclareSignal<MainMenuStateSignals.OnHideMainMenu>().OptionalSubscriber();
             // Container.DeclareSignal<MainMenuStateSignals.OnActiveMainMenuInteraction>().OptionalSubscriber();
         }

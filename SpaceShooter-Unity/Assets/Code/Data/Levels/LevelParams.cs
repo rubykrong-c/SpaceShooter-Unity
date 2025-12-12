@@ -7,7 +7,7 @@ namespace Code.Levels
     [Serializable]
     public class LevelParams
     {
-        public float Duration;
+        public float Rate;
         public List<SubLevels> SubLevels;
     }
 

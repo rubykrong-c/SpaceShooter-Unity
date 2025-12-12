@@ -7,27 +7,51 @@ namespace Code.Levels
     {
         public string SaveKey => "level_progress";
         public Type DataType => typeof(LevelProgressSaveData);
+        public LevelProgressSaveData LevelsData => _levelsData;
+        public int CurrentLevel => _currentLevel;
 
         private LevelProgressSaveData _levelsData = new LevelProgressSaveData();
+        private int _currentLevel;
         
-        public LevelProgressSaveData LevelsData => _levelsData;
+        private readonly ILevelParamsGenerator _generatorLevels;
+
+        public LevelProgressService(ILevelParamsGenerator generatorLevels)
+        {
+            _generatorLevels = generatorLevels;
+        }
 
         public LevelData GetLevel(int id)
         {
-            var level = _levelsData.LevelsData.Find(x => x.Id == id);
-
-            return level;
+            if (_levelsData.LevelsData.Count > id)
+            {
+                return _levelsData.LevelsData[id];
+            }
+            
+            return null;
         }
 
         public void AddLevelData(LevelData data)
         {
-            //TODO: add return bool success
-            var id = data.Id;
-            var lvl = _levelsData.LevelsData.Find(x => x.Id == id);
-            if (lvl == null)
+            _levelsData.LevelsData.Add(data); 
+        }
+
+        public void IncreaseCurrentLvl()
+        {
+            _currentLevel++;
+        }
+        
+        public void EnsureInitialized()
+        {
+            if (_levelsData.LevelsData.Count > 0)
             {
-                _levelsData.LevelsData.Add(data);
+                return;
             }
+
+            var firstLevel = new LevelData();
+            _currentLevel = 0;
+            firstLevel.Status = ELevelStatus.OPENED;
+            firstLevel.Params = _generatorLevels.GenerateLevelParams();
+            _levelsData.LevelsData.Add(firstLevel);
         }
 
         // Снимок состояния для сохранения
@@ -35,7 +59,8 @@ namespace Code.Levels
         {
             return new LevelProgressSaveData()
             {
-                LevelsData = new List<LevelData>(_levelsData.LevelsData)
+                LevelsData = new List<LevelData>(_levelsData.LevelsData),
+                CurrentLvl = _currentLevel
             };
         }
 
@@ -46,6 +71,7 @@ namespace Code.Levels
             {
                 _levelsData = new LevelProgressSaveData
                 {
+                    CurrentLvl = data.CurrentLvl,
                     LevelsData = new List<LevelData>(data.LevelsData)
                 };
             }
@@ -55,5 +81,6 @@ namespace Code.Levels
                     $"[LevelProgressService] Invalid state type: {state?.GetType()}");
             }
         }
+
     }
 }
