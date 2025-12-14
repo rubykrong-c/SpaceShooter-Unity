@@ -5,20 +5,20 @@ namespace Code.Levels
 {
     public class GeneratorLevels: ILevelParamsGenerator
     {
-        public LevelParams GenerateLevelParams()
+        public LevelParams GenerateLevelParams(int id)
         {
-            var par = DebugGenerateLevelParams();
+            var par = DebugGenerateLevelParams(id);
             return par;
         }
 
-        private static LevelParams DebugGenerateLevelParams()
+        private LevelParams DebugGenerateLevelParams(int id)
         {
             var par = new LevelParams();
-            par.Rate = 1f;
+            par.Rate = 1f + 0.01f*id;
             par.SubLevels = new List<SubLevels>();
             var subLevel = new SubLevels();
             subLevel.AsteroidType = EAsteroidType.RED;
-            subLevel.Count = 10;
+            subLevel.Count = 10  + 1*id;
             par.SubLevels.Add(subLevel);
             return par;
         }

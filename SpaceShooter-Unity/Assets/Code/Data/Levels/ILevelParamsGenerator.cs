@@ -2,6 +2,6 @@ namespace Code.Levels
 {
     public interface ILevelParamsGenerator
     {
-        LevelParams GenerateLevelParams();
+        LevelParams GenerateLevelParams(int id);
     }
 }

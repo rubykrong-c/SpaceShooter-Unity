@@ -10,22 +10,22 @@ public class MainMenuScreenPresenter : BasePresenter
     {
         private readonly IMainMenuScreenView _view;
         private readonly SignalBus _signals;
-        private readonly LevelProgressService _levelProgressService;
+        private readonly ILevelProgressReader _levelProgressReader;
 
         public MainMenuScreenPresenter(IMainMenuScreenView view,
                                        SignalBus signals,
-                                       LevelProgressService levelProgressService)
+                                       ILevelProgressReader levelProgressReader)
         {
             _view = view;
             _signals = signals;
-            _levelProgressService = levelProgressService;
+            _levelProgressReader = levelProgressReader;
             
             _signals.Subscribe<MainMenuStateSignals.OnShowMainMenu>(ActiveScreen);
         }
 
         private void ActiveScreen()
         {
-            _view.SetCurrentLevel(_levelProgressService.CurrentLevel);
+            _view.SetCurrentLevel(_levelProgressReader.CurrentLevel);
         }
         
         private void TryToStartGameplay()

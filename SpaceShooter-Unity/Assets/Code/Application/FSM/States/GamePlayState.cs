@@ -20,6 +20,7 @@ namespace Code.Application.FSM.States
         public async UniTask OnEnter()
         {
             await _sceneLoader.LoadSceneAndUnloadLoading(EScene.CORE);
+            
         }
 
         public async UniTask OnExit()

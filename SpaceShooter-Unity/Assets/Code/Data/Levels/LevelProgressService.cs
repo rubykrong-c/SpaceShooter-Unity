@@ -3,41 +3,35 @@ using System.Collections.Generic;
 
 namespace Code.Levels
 {
-    public class LevelProgressService : ISaveable
+    public class LevelProgressService : ISaveable, ILevelProgressWriter, ILevelProgressReader
     {
+        
+        private readonly ILevelParamsGenerator _generatorLevels;
         public string SaveKey => "level_progress";
         public Type DataType => typeof(LevelProgressSaveData);
-        public LevelProgressSaveData LevelsData => _levelsData;
         public int CurrentLevel => _currentLevel;
-
+        
         private LevelProgressSaveData _levelsData = new LevelProgressSaveData();
         private int _currentLevel;
         
-        private readonly ILevelParamsGenerator _generatorLevels;
-
         public LevelProgressService(ILevelParamsGenerator generatorLevels)
         {
             _generatorLevels = generatorLevels;
         }
-
-        public LevelData GetLevel(int id)
+        
+        public LevelParams GetParamCurrentLevel()
         {
-            if (_levelsData.LevelsData.Count > id)
-            {
-                return _levelsData.LevelsData[id];
-            }
-            
-            return null;
+            return _levelsData.LevelsData[_currentLevel].Params;
         }
 
-        public void AddLevelData(LevelData data)
+        public void CompleteCurrentLevelAndGenerateNext()
         {
-            _levelsData.LevelsData.Add(data); 
-        }
-
-        public void IncreaseCurrentLvl()
-        {
+            var currentLvl = _currentLevel;
             _currentLevel++;
+            
+            AddNewLevel();
+            CompleteCurrentLevelAndOpenNext(currentLvl);
+            GenerateParamForNextLevel(currentLvl + 1);
         }
         
         public void EnsureInitialized()
@@ -47,13 +41,10 @@ namespace Code.Levels
                 return;
             }
 
-            var firstLevel = new LevelData();
-            _currentLevel = 0;
-            firstLevel.Status = ELevelStatus.OPENED;
-            firstLevel.Params = _generatorLevels.GenerateLevelParams();
-            _levelsData.LevelsData.Add(firstLevel);
+            CreateFirstLevel();
+            CreateSecondLevel();
         }
-
+        
         // Снимок состояния для сохранения
         public object CaptureState()
         {
@@ -74,6 +65,8 @@ namespace Code.Levels
                     CurrentLvl = data.CurrentLvl,
                     LevelsData = new List<LevelData>(data.LevelsData)
                 };
+
+                _currentLevel = _levelsData.CurrentLvl;
             }
             else
             {
@@ -81,6 +74,40 @@ namespace Code.Levels
                     $"[LevelProgressService] Invalid state type: {state?.GetType()}");
             }
         }
+        
+        private void CreateSecondLevel()
+        {
+            var secondLevel = new LevelData();
+            secondLevel.Status = ELevelStatus.CLOSED;
+            _levelsData.LevelsData.Add(secondLevel);
+        }
 
+        private void CreateFirstLevel()
+        {
+            var firstLevel = new LevelData();
+            _currentLevel = 0;
+            firstLevel.Status = ELevelStatus.OPENED;
+            firstLevel.Params = _generatorLevels.GenerateLevelParams(_currentLevel);
+            _levelsData.LevelsData.Add(firstLevel);
+        }
+        
+        private void AddNewLevel()
+        {
+            var newLevel = new LevelData();
+            newLevel.Status = ELevelStatus.CLOSED;
+            _levelsData.LevelsData.Add(newLevel);
+        }
+
+        private void CompleteCurrentLevelAndOpenNext(int currentLvl)
+        {
+            _levelsData.LevelsData[currentLvl].Status = ELevelStatus.PASSED;
+            _levelsData.LevelsData[currentLvl + 1].Status = ELevelStatus.OPENED;
+        }
+
+        private void GenerateParamForNextLevel(int currentLvl)
+        {
+            _levelsData.LevelsData[currentLvl].Params = _generatorLevels.GenerateLevelParams(currentLvl);
+        }
+        
     }
 }
