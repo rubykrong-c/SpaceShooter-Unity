@@ -1,4 +1,5 @@
 using Code.Gameplay.Core;
+using Code.Gameplay.Core.FSM.Installers;
 using Code.Gameplay.Core.Signals;
 using Code.Gameplay.UI.Screens.GameplayCoreScreen;
 using Zenject;
@@ -9,11 +10,12 @@ namespace Code.Gameplay.Installers
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<GameplayController>().AsSingle();
             
-            Container.BindInterfacesAndSelfTo<GameplayController>()
-                .AsSingle();
             InstallSignals();
             InstallUI();
+            InstallStates();
+            InstallLevel();
         }
         
         
@@ -27,6 +29,17 @@ namespace Code.Gameplay.Installers
         private void InstallUI()
         {
             GameplayCoreScreenInstaller.Install(Container);
+        }
+        
+        private void InstallStates()
+        {
+            GameplayStateMachineStatesInstaller.Install(Container);
+        }
+
+        private void InstallLevel()
+        {
+            Container.BindInterfacesAndSelfTo<LevelLoaderController>().AsSingle();
+            
         }
     }
 }

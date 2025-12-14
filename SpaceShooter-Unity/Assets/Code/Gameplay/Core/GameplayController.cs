@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Code.Application.Signals;
+using Code.Gameplay.Core.FSM.Base;
 using Code.Gameplay.Core.Signals;
 using Code.Levels;
 using Cysharp.Threading.Tasks;
@@ -38,7 +39,6 @@ namespace Code.Gameplay.Core
             _signals.TryUnsubscribe<GameplaySignals.OnCurrentLevelCompleted_Debug>(HandleLevelCompletedCondition);
             _signals.TryUnsubscribe<GameplaySignals.OnCurrentLevelFailed_Debug>(HandleCurrentLevelFailed);
             _signals.TryUnsubscribe<GameplaySignals.OnExitGameplay_Debug>(HandleExitFromGameplay);
-
         }
         
         private void LogLevelParam()
@@ -54,12 +54,15 @@ namespace Code.Gameplay.Core
         {
             _levelProgressWriter.CompleteCurrentLevelAndGenerateNext();
             Debug.Log("Win debug");
+            await UniTask.Delay(400);
+            _signals.TryFire<GameplayStateMachineStatesSignals.OnCoreGameplayFinished>();
         }
 
         private async void HandleCurrentLevelFailed()
         {
-            await UniTask.Delay(550);
             Debug.Log("Lose debug");
+            await UniTask.Delay(550);
+            _signals.TryFire<GameplayStateMachineStatesSignals.OnCoreGameplayFinished>();
         }
         
         private void HandleExitFromGameplay()
