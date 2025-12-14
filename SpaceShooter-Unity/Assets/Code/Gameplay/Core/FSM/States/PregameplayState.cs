@@ -8,15 +8,19 @@ namespace Code.Gameplay.Core.FSM.States
     public class PregameplayState : IBaseState
     {
         private readonly SignalBus _signals;
+        private readonly ILevelLoader _levelLoader;
 
-        public PregameplayState(SignalBus signals)
+        public PregameplayState(SignalBus signals,
+            ILevelLoader levelLoader)
         {
             _signals = signals;
+            _levelLoader = levelLoader;
         }
 
         public async UniTask OnEnter()
         {
             UnityEngine.Debug.Log("PRE GAMEPLAY");
+            _levelLoader.StartLevel();
             await UniTask.DelayFrame(1);
             _signals.TryFire<GameplayStateMachineStatesSignals.OnCoreGameplayStarted>();
         }

@@ -9,10 +9,12 @@ namespace Code.Gameplay.Core.FSM.States
     {
 
         private readonly SignalBus _signals;
+        private readonly ILevelLoader _levelLoader;
         
-        public CoreGameplayState(SignalBus signal)
+        public CoreGameplayState(SignalBus signal, ILevelLoader levelLoader)
         {
             _signals = signal;
+            _levelLoader = levelLoader;
         }
         
         public async UniTask OnEnter()
@@ -23,6 +25,7 @@ namespace Code.Gameplay.Core.FSM.States
 
         public UniTask OnExit()
         {
+            _levelLoader.StopLevel();
             // TODO: это надо перенести в Result Exit
             _signals.TryFire<ApplicationSignals.OnBackToPreviousState>();
             return UniTask.DelayFrame(1);

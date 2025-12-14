@@ -39,7 +39,7 @@ namespace Code.Gameplay.Installers
         private void InstallLevel()
         {
             Container.BindInterfacesAndSelfTo<LevelLoaderController>().AsSingle();
-            
+            Container.BindInterfacesAndSelfTo<AsteroidSpawner>().AsSingle();
         }
     }
 }
