@@ -4,7 +4,9 @@ using Code.Gameplay.Core.FSM.Base;
 using Code.Gameplay.Core.Signals;
 using Code.Levels;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using Zenject;
+using IPoolable = Code.Base.Pool.IPoolable;
 
 namespace Code.Gameplay.Core
 {
@@ -39,6 +41,11 @@ namespace Code.Gameplay.Core
             _cts = null;
         }
 
+        public void DestroyAsteroid(GameObject asteroid)
+        {
+            _spawner.Despawn(asteroid);
+        }
+
         public void Dispose()
         {
             StopLevel();
@@ -56,8 +63,6 @@ namespace Code.Gameplay.Core
                     await UniTask.Delay(TimeSpan.FromSeconds(level.Rate), cancellationToken: token);
                 }
             }
-
-            _signals.TryFire<GameplaySignals.OnCurrentLevelCompleted_Debug>();
         }
     }
 }

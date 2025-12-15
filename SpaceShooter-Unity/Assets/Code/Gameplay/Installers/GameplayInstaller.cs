@@ -1,13 +1,19 @@
 using Code.Gameplay.Core;
 using Code.Gameplay.Core.FSM.Installers;
+using Code.Gameplay.Core.Input;
+using Code.Gameplay.Core.Ship;
 using Code.Gameplay.Core.Signals;
 using Code.Gameplay.UI.Screens.GameplayCoreScreen;
+using UnityEngine;
 using Zenject;
 
 namespace Code.Gameplay.Installers
 {
     public class GameplayInstaller : MonoInstaller
     {
+
+        [SerializeField] private ShipView _shipPrefab;
+        
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<GameplayController>().AsSingle();
@@ -16,9 +22,27 @@ namespace Code.Gameplay.Installers
             InstallUI();
             InstallStates();
             InstallLevel();
+            InstallAsteroids();
+            InstallShip();
+            
         }
-        
-        
+
+        private void InstallShip()
+        {
+            Container.BindFactory<ShipView, ShipView.Factory>().FromComponentInNewPrefab(_shipPrefab)
+                .WithGameObjectName("Ship").AsSingle();
+            
+            Container.BindInterfacesAndSelfTo<ShipController>().AsSingle();
+        }
+
+        private void InstallAsteroids()
+        {
+            Container.BindFactory<LinearDownMovement, LinearDownMovement.Factory>().AsTransient();
+            Container.BindFactory<SinusMovement, SinusMovement.Factory>().AsTransient();
+            Container.BindInterfacesAndSelfTo<AsteroidMovementResolver>().AsSingle();
+        }
+
+
         private void InstallSignals()
         {
             Container.DeclareSignal<GameplaySignals.OnCurrentLevelCompleted_Debug>().OptionalSubscriber();

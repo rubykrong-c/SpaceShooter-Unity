@@ -18,6 +18,10 @@ namespace Code.Levels
             par.SubLevels = new List<SubLevels>();
             var subLevel = new SubLevels();
             subLevel.AsteroidType = EAsteroidType.RED;
+            subLevel.Count = 2  + 1*id;
+            par.SubLevels.Add(subLevel);
+            subLevel = new SubLevels();
+            subLevel.AsteroidType = EAsteroidType.GRAY;
             subLevel.Count = 10  + 1*id;
             par.SubLevels.Add(subLevel);
             return par;

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Code.Gameplay.Core.Settings.CoreSettingsInstaller
   _levelLoaderSettings:
     ElementPoolKey: Asteroid
-    ColorMaterials:
+    _dataMaterials:
       reorderableList:
         canAdd: 1
         canRemove: 1
@@ -41,5 +41,7 @@ MonoBehaviour:
       _keyValues: 0100000002000000
       _keys: 0100000002000000
       _values:
-      - {r: 1, g: 0.4198113, b: 0.4198113, a: 1}
-      - {r: 0.6886792, g: 0.6886792, b: 0.6886792, a: 1}
+      - ColorAsteroid: {r: 1, g: 0, b: 0, a: 1}
+        Speed: 1
+      - ColorAsteroid: {r: 0.46524566, g: 0.55324805, b: 0.8018868, a: 1}
+        Speed: 2

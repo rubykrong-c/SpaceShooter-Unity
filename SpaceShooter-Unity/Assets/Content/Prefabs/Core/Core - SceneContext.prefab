@@ -78,3 +78,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9229fefd946f47dc883514ae1db84cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Code.Gameplay.Installers.GameplayInstaller
+  _shipPrefab: {fileID: 8070358918083441188, guid: 10d71449c97d1490bacb7ed91f5240b5, type: 3}
