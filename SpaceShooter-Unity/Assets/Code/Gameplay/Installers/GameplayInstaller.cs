@@ -70,6 +70,7 @@ namespace Code.Gameplay.Installers
         {
             Container.BindInterfacesAndSelfTo<LevelLoaderController>().AsSingle();
             Container.BindInterfacesAndSelfTo<AsteroidSpawner>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LevelAsteroidCounter>().AsSingle();
         }
     }
 }

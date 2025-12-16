@@ -15,23 +15,28 @@ namespace Code.Gameplay.Core
         private readonly SignalBus _signals;
         private readonly ILevelProgressReader _progress;
         private readonly IAsteroidSpawner _spawner;
+        private readonly LevelAsteroidCounter _asteroidCounter;
         private CancellationTokenSource _cts;
 
         public LevelLoaderController(
             SignalBus signals,
             ILevelProgressReader progress,
-            IAsteroidSpawner spawner)
+            IAsteroidSpawner spawner,
+            LevelAsteroidCounter asteroidCounter)
         {
             _signals = signals;
             _progress = progress;
             _spawner = spawner;
+            _asteroidCounter = asteroidCounter;
         }
         
         public void StartLevel()
         {
             StopLevel();
+            var level = _progress.GetParamCurrentLevel();
+            _asteroidCounter.Prepare(level);
             _cts = new CancellationTokenSource();
-            LoadCurrentLevelAsync(_cts.Token).Forget();
+            LoadCurrentLevelAsync(level, _cts.Token).Forget();
         }
         
         public void StopLevel()
@@ -51,9 +56,8 @@ namespace Code.Gameplay.Core
             StopLevel();
         }
 
-        private async UniTask LoadCurrentLevelAsync(CancellationToken token)
+        private async UniTask LoadCurrentLevelAsync(LevelParams level, CancellationToken token)
         {
-            var level = _progress.GetParamCurrentLevel(); // данные из LevelProgressService
             foreach (var sub in level.SubLevels)
             {
                 for (int i = 0; i < sub.Count; i++)
