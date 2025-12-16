@@ -8,5 +8,6 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
         event Action OnLoseButtonPressed;
         event Action OnExitButtonPressed;
         void ActiveScreen(bool active);
+        void RedrawHpText(string text);
     }
 }

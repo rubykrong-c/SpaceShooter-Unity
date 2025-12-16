@@ -9,10 +9,13 @@ namespace Code.Gameplay.Core
 {
     public class AsteroidSpawner : IAsteroidSpawner
     {
+        public event Action OnAsteroidDestroy;
+        
         private readonly PoolingSystem _poolingSystem;
         private readonly Settings _settings;
         private readonly IAsteroidMovementResolver _movementResolver;
         private readonly LevelContainer _levelContainer;
+        
 
         private List<Vector2> _spawnPointList = new List<Vector2>();
         public AsteroidSpawner(
@@ -29,6 +32,7 @@ namespace Code.Gameplay.Core
             _spawnPointList = _levelContainer.GetSpawnPointsPos();
         }
         
+
         public void Spawn(EAsteroidType type)
         {
             var obj = CreateAsteroid(type);
@@ -38,6 +42,7 @@ namespace Code.Gameplay.Core
         public void Despawn(GameObject asteroid)
         {
             _poolingSystem.DestroyAPS(asteroid);
+            OnAsteroidDestroy?.Invoke();
         }
 
         private AsteroidBehaviour CreateAsteroid(EAsteroidType type)
@@ -47,6 +52,7 @@ namespace Code.Gameplay.Core
             AsteroidBehaviour element = _poolingSystem.InstantiateAPS(_settings.ElementPoolKey).GetComponent<AsteroidBehaviour>();
             var movement = _movementResolver.Resolve(type);
             element.Configure(type, data, movement);
+            element.SetCollisionHandler(Despawn);
             
             return element;
         }

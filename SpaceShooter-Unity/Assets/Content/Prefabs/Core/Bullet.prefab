@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8993112452195329608}
   - component: {fileID: 8536765967397801883}
   - component: {fileID: 8835018359093833630}
+  - component: {fileID: 3144473037701270488}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -149,7 +150,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -165,3 +166,15 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.15166667, y: 0.6225}
   m_EdgeRadius: 0
+--- !u!114 &3144473037701270488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5549430003516438529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9a756e5d7114a3281a181fdb14da6b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Code.Gameplay.Core.Ship.Bullet.BulletBehaviour

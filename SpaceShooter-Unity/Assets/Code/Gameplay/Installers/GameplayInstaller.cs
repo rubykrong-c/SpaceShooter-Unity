@@ -2,6 +2,7 @@ using Code.Gameplay.Core;
 using Code.Gameplay.Core.FSM.Installers;
 using Code.Gameplay.Core.Input;
 using Code.Gameplay.Core.Ship;
+using Code.Gameplay.Core.Ship.Bullet;
 using Code.Gameplay.Core.Signals;
 using Code.Gameplay.UI.Screens.GameplayCoreScreen;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Code.Gameplay.Installers
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<GameplayController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CollisionHandler>().AsSingle();
             
             InstallSignals();
             InstallUI();
@@ -24,7 +26,6 @@ namespace Code.Gameplay.Installers
             InstallLevel();
             InstallAsteroids();
             InstallShip();
-            
         }
 
         private void InstallShip()
@@ -33,6 +34,10 @@ namespace Code.Gameplay.Installers
                 .WithGameObjectName("Ship").AsSingle();
             
             Container.BindInterfacesAndSelfTo<ShipController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ShipWeaponController>().AsSingle();
+            Container.BindInterfacesAndSelfTo<BulletSpawner>().AsSingle();
+            Container.BindFactory<LinearForwardMovement, LinearForwardMovement.Factory>().AsTransient();
+            Container.Bind<ShipModel>().AsSingle();
         }
 
         private void InstallAsteroids()
@@ -48,6 +53,7 @@ namespace Code.Gameplay.Installers
             Container.DeclareSignal<GameplaySignals.OnCurrentLevelCompleted_Debug>().OptionalSubscriber();
             Container.DeclareSignal<GameplaySignals.OnCurrentLevelFailed_Debug>().OptionalSubscriber();
             Container.DeclareSignal<GameplaySignals.OnExitGameplay_Debug>().OptionalSubscriber();
+            Container.DeclareSignal<GameplaySignals.OnCurrentLevelFailed>().OptionalSubscriber();
         }
         
         private void InstallUI()

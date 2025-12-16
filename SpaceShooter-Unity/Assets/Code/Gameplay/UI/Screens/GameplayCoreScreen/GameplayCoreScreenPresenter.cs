@@ -1,5 +1,6 @@
 using Code.Base.MVP;
 using Code.Base.Screens;
+using Code.Gameplay.Core.Ship;
 using Code.Gameplay.Core.Signals;
 using Zenject;
 
@@ -10,15 +11,18 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
      
         private readonly IGameplayCoreScreenView _view;
         private readonly SignalBus _signals;
+        private readonly ShipModel _shipModel;
         
         public bool IsActive { get; private set; }
         
         public GameplayCoreScreenPresenter(
             IGameplayCoreScreenView view,
-            SignalBus signals)
+            SignalBus signals,
+            ShipModel shipModel)
         {
             _view = view;
             _signals = signals;
+            _shipModel = shipModel;
         }
         
         public async void ActiveScreen()
@@ -38,6 +42,9 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
             _view.OnWinButtonPressed += OnWin;
             _view.OnLoseButtonPressed += OnLose;
             _view.OnExitButtonPressed += OnExit;
+
+            _shipModel.HpChanged += UpdateHpText;
+            UpdateHpText(_shipModel.CurrentHp);
         }
 
         protected override void UnsubscribeOnViewEvents()
@@ -45,6 +52,14 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
             _view.OnWinButtonPressed -= OnWin;
             _view.OnLoseButtonPressed -= OnLose;
             _view.OnExitButtonPressed -= OnExit;
+            
+            _shipModel.HpChanged -= UpdateHpText;
+        }
+
+        private void UpdateHpText(int hp)
+        {
+            string text = $"HP : {hp}";
+            _view.RedrawHpText(text);
         }
         
         private void OnWin()

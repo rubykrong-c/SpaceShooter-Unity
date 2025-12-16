@@ -27,6 +27,7 @@ namespace Code.Gameplay.Core
             _signals.Subscribe<GameplaySignals.OnCurrentLevelCompleted_Debug>(HandleLevelCompletedCondition);
             _signals.Subscribe<GameplaySignals.OnCurrentLevelFailed_Debug>(HandleCurrentLevelFailed);
             _signals.Subscribe<GameplaySignals.OnExitGameplay_Debug>(HandleExitFromGameplay);
+            _signals.Subscribe<GameplaySignals.OnCurrentLevelFailed>(HandleFailedLevel);
         }
 
         public void Initialize()
@@ -39,6 +40,7 @@ namespace Code.Gameplay.Core
             _signals.TryUnsubscribe<GameplaySignals.OnCurrentLevelCompleted_Debug>(HandleLevelCompletedCondition);
             _signals.TryUnsubscribe<GameplaySignals.OnCurrentLevelFailed_Debug>(HandleCurrentLevelFailed);
             _signals.TryUnsubscribe<GameplaySignals.OnExitGameplay_Debug>(HandleExitFromGameplay);
+            _signals.TryUnsubscribe<GameplaySignals.OnCurrentLevelFailed>(HandleFailedLevel);
         }
         
         private void LogLevelParam()
@@ -69,6 +71,13 @@ namespace Code.Gameplay.Core
         {
             _signals.TryFire<ApplicationSignals.OnBackToPreviousState>();
             Debug.Log("Exit From gameplay");
+        }
+        
+        private void HandleFailedLevel()
+        {
+            //Открывать попап
+            _signals.TryFire<ApplicationSignals.OnBackToPreviousState>();
+            Debug.Log("Ship is dead");
         }
 
        

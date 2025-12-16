@@ -6,20 +6,20 @@ namespace Code.Gameplay.Core
 {
     public class AsteroidKillZone : MonoBehaviour
     {
-        private ILevelLoader _levelLoader;
+        private IAsteroidSpawner _asteroidSpawner;
 
         [Inject]
-        private void Construct(ILevelLoader levelLoader)
+        private void Construct(IAsteroidSpawner asteroidSpawner)
         {
-            _levelLoader = levelLoader;
+            _asteroidSpawner = asteroidSpawner;
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
-            var poolable = other.GetComponent<IPoolable>();
+            var poolable = other.GetComponent<AsteroidBehaviour>();
             if (poolable != null)
             {
-                _levelLoader.DestroyAsteroid(other.gameObject);
+                _asteroidSpawner.Despawn(poolable.gameObject);
             }
         }
     }

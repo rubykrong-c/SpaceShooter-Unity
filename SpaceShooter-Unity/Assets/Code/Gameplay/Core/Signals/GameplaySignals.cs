@@ -13,8 +13,11 @@ namespace Code.Gameplay.Core.Signals
         public class OnCurrentLevelFailed_Debug
         {
         }
-        
-        
+
+        public class OnCurrentLevelFailed
+        {
+            
+        }
         
        
     }

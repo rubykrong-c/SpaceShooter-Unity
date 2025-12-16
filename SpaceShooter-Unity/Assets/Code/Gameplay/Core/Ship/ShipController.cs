@@ -1,14 +1,20 @@
 using Code.Gameplay.Core.Input;
+using Code.Gameplay.Core.Signals;
 using UnityEngine;
 using Zenject;
 
 namespace Code.Gameplay.Core.Ship
 {
-    public class ShipController: IShipController
+    public class ShipController: IShipController, IShipPositionGetter
     {
+
+        public Vector2 PositionWeapon => _ship.transform.position;
+        
         private readonly ShipView.Factory _shipFactory;
         private readonly CameraContainer _cameraContainer;
         private readonly IInputHandler _inputHandler;
+        private readonly ShipModel _shipModel;
+        private readonly SignalBus _signalBus;
         
         private ShipView _ship;
         private bool _dragging;
@@ -22,11 +28,15 @@ namespace Code.Gameplay.Core.Ship
         public ShipController(
         ShipView.Factory shipFactory,
         CameraContainer cameraContainer, 
-        IInputHandler inputHandler)
+        IInputHandler inputHandler,
+        ShipModel shipModel,
+        SignalBus signalBus)
         {
             _shipFactory = shipFactory;
             _cameraContainer = cameraContainer;
             _inputHandler = inputHandler;
+            _shipModel = shipModel;
+            _signalBus = signalBus;
             
             _inputHandler.SetPointerDownCallback(HandlePointerDown);
             _inputHandler.SetPointerUpCallback(HandlePointerUp);
@@ -38,7 +48,39 @@ namespace Code.Gameplay.Core.Ship
             if (_ship == null)
             {
                 _ship = _shipFactory.Create();
+                SubscribeOnViewEvents();
             }
+        }
+        
+        private void SubscribeOnViewEvents()
+        {
+            _ship.OnHitAsteroid += GetDmg;
+            _shipModel.HpChanged += CheckDeath;
+        }
+
+        private void UnsubscribeOnViewEvents()
+        {
+            _ship.OnHitAsteroid -= GetDmg;
+            _shipModel.HpChanged -= CheckDeath;
+        }
+
+        private void GetDmg()
+        {
+            _shipModel.DecreaseHp();
+        }
+
+        private void CheckDeath(int hp)
+        {
+            if (hp <= 0)
+            {
+                DeathShip();
+            }
+        }
+
+        private void DeathShip()
+        {
+            UnsubscribeOnViewEvents();
+            _signalBus.TryFire<GameplaySignals.OnCurrentLevelFailed>();
         }
         
         private void HandlePointerDown(Vector3 screenPos)
@@ -72,9 +114,9 @@ namespace Code.Gameplay.Core.Ship
         
         private void CacheCameraBounds()
         {
-            var z = Mathf.Abs(_camera.transform.position.z - _ship.transform.position.z);
-            _minBounds = _camera.ViewportToWorldPoint(new Vector3(0, 0, z));
-            _maxBounds = _camera.ViewportToWorldPoint(new Vector3(1, 1, z));
+            var bounds = Util.CacheCameraBounds(_camera, _ship.transform);
+            _minBounds = bounds.Item1;
+            _maxBounds = bounds.Item2;
         }
 
         private Vector3 ClampToCamera(Vector3 position)
@@ -86,10 +128,6 @@ namespace Code.Gameplay.Core.Ship
 
         private Vector3 ScreenToWorld(Vector3 screenPos)
         {
-            if (_ship is null)
-            {
-                Debug.LogError("EEEEEEEES");
-            }
             var depth = Mathf.Abs(_ship.transform.position.z 
                                   - _camera.transform.position.z);
             return _camera.ScreenToWorldPoint(new Vector3(screenPos.x, screenPos.y, depth));

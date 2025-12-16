@@ -52,6 +52,12 @@ MonoBehaviour:
     AllowGrow: 1
     AutoDestroy: 1
     clones: []
+  - ID: Bullet
+    SourcePrefab: {fileID: 5549430003516438529, guid: 1afc260ce8512464da8fcb6f8bd288a1, type: 3}
+    MinNumberOfObject: 10
+    AllowGrow: 1
+    AutoDestroy: 1
+    clones: []
   DefaultCount: 10
   initScale: {x: 0, y: 0, z: 0}
 --- !u!114 &9177660396814238026

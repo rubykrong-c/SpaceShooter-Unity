@@ -1,5 +1,6 @@
 using System;
 using Code.Base.MVP;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -17,6 +18,7 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
         [SerializeField] private Button _winButton;
         [SerializeField] private Button _loseButton;
         [SerializeField] private Button _exitButton;
+        [SerializeField] private TMP_Text _hpText;
 
 #pragma warning restore 0649
         
@@ -30,6 +32,11 @@ namespace Code.Gameplay.UI.Screens.GameplayCoreScreen
         public void ActiveScreen(bool active)
         {
             gameObject.SetActive(active);
+        }
+
+        public void RedrawHpText(string text)
+        {
+            _hpText.text = text;
         }
         
         private void WinButtonPressed()
